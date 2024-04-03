@@ -11,6 +11,7 @@ public class InheritanceMain06 {
 		Point p2 = new Point(0, 0);
 		System.out.println(p2); // p2.toString()
 		
+<<<<<<< HEAD
 		System.out.println("비교 연산자 == 결과: " + (p1 == p2)); // 비교 연산자
 		System.out.println("equals() 메서드 결과: " + p1.equals(p2)); // equals() 메서드
 		// 객체의 동등비교에서는 비교 연산자(==, !=)를 사용하면 안됨!
@@ -36,6 +37,12 @@ public class InheritanceMain06 {
 		System.out.println(user1.hashCode());
 		System.out.println(user2.hashCode());
 		
+=======
+		System.out.println(p1 == p2);
+		System.out.println(p1.equals(p2));
+		// 객체의 동등비교에서는 비교 연산자(==, !=)를 사용하면 안됨!
+
+>>>>>>> fab8f94c3d392500379f4a95c55c21ccd2b22233
 	}
 
 }

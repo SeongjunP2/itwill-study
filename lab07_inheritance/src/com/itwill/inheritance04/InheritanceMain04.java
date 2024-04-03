@@ -8,7 +8,11 @@ package com.itwill.inheritance04;
  * 	 (2) final 필드를 초기화할 수 있는 아규먼트를 갖는 생성자를 작성.
  * final 메서드: 변경할 수 없는 메서드. 재정의(override)할 수 없는 메서드.
  * final 클래스: 변경할 수 있는 클래스. 상속받을 수 없는 클래스.
+<<<<<<< HEAD
  * 	 (예) java.lang.System, java.lang.String, ...
+=======
+ * 	 (예0 java.lang.System, java.lang.String, ...
+>>>>>>> fab8f94c3d392500379f4a95c55c21ccd2b22233
  */
 
 //class Mystring extends String {} //-> final 클래스를 상속하는 새로운 클래스는 선언할 수 없음.
