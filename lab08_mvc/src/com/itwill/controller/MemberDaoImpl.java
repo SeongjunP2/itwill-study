@@ -26,9 +26,13 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int create(Member member) {
-		members[count] = member;
-		count++;
-		return 1;
+		if (count < MAX_LENGTH) {
+			members[count] = member;
+			count++;
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
@@ -53,9 +57,13 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int update(int index, String password) {
-		members[index].setPassword(password);
+		if (index < 0 || index >= members.length || members[index] == null) {
+			return 0;
+		} else {
+			members[index].setPassword(password);
+			return 1;
+		}
 		
-		return 1;
 	}
 
 }

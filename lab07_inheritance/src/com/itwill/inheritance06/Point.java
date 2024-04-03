@@ -10,11 +10,7 @@ public class Point {
 	public Point() {}
 	
 	public Point(int x, int y) {
-<<<<<<< HEAD
 		this.x = x;
-=======
-		this.x = y;
->>>>>>> fab8f94c3d392500379f4a95c55c21ccd2b22233
 		this.y = y;
 	}
 	

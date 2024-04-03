@@ -53,21 +53,17 @@ public class MemberMain {
 		int index = Integer.parseInt(scanner.nextLine());
 
 		Member member = dao.read(index);
-		if (member == null) {
-			System.out.println("해당 인덱스 내용 없음!");
+		System.out.println("수정 전: " + member);
+
+		System.out.println("새 비밀번호>> ");
+		String password = scanner.nextLine();
+
+		// View에서 Controller의 기능을 사용해서 비밀번호를 업데이트
+		int result = dao.update(index, password);
+		if (result == 1) {
+			System.out.println("비밀번호 업데이트 성공");
 		} else {
-			System.out.println("수정 전: " + member);
-
-			System.out.println("새 비밀번호>> ");
-			String password = scanner.nextLine();
-
-			// View에서 Controller의 기능을 사용해서 비밀번호를 업데이트
-			int result = dao.update(index, password);
-			if (result == 1) {
-				System.out.println("비밀번호 업데이트 성공");
-			} else {
-				System.out.println("비밀번호 업데이트 실패");
-			}
+			System.out.println("비밀번호 업데이트 실패");
 		}
 	}
 
@@ -77,21 +73,21 @@ public class MemberMain {
 		System.out.println("검색할 인덱스 입력>> ");
 		int index = Integer.parseInt(scanner.nextLine());
 
-			// View에서 Controller의 기능을 사용해서 해당 인덱스의 회원 정보를 가져옴.
-			Member member = dao.read(index);
-			if (member != null) {
-				System.out.println(member);
-			} else {
-				System.out.println("해당 인덱스에는 회원 정보 없습니다.");
-			}
+		// View에서 Controller의 기능을 사용해서 해당 인덱스의 회원 정보를 가져옴.
+		Member member = dao.read(index);
+		if (member != null) {
+			System.out.println(member);
+		} else {
+			System.out.println("해당 인덱스에는 회원 정보 없습니다.");
+		}
 
 	}
 
 	private void readAllMembers() {
 		System.out.println("\n--- 회원 목록 ---");
 		Member[] members = dao.read(); // View에서 Controller 기능을 사용, 출력할 데이터를 가져옴.
-			for (Member m : members) {
-				System.out.println(m);
+		for (Member m : members) {
+			System.out.println(m);
 		}
 	}
 
