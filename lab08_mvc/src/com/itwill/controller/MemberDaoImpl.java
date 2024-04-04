@@ -40,7 +40,7 @@ public class MemberDaoImpl implements MemberDao {
 		// TODO 배열 members의 원소들 중 null이 아닌 원소들로만 이루어진 배열을 리턴
 		Member[] members2 = new Member[count];
 		
-		for(int i = 0; i < count; i++) {
+		for(int i = 0; i < count; i++) { // 카운트가 쌓인 수만큼 배열 출력
 			members2[i] = members[i];
 		}
 		
