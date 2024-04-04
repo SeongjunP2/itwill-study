@@ -41,9 +41,9 @@ public class ContactDaoImpl implements ContactDao {
 	public Contact[] read() {
 		Contact[] contacts = new Contact[count];
 		
-//		for(int i = 0; i < count; i++) { // 카운트가 쌓인 수만큼 배열 출력
-//			contacts[i] = contacts[i];
-//		}
+		for(int i = 0; i < count; i++) { // 카운트가 쌓인 수만큼 배열 출력
+			contacts[i] = this.contacts[i];
+		}
 		
 		return contacts;
 	}
@@ -61,9 +61,10 @@ public class ContactDaoImpl implements ContactDao {
 		if (index < 0 || index >= contacts.length || contacts[index] == null) {
 			return 0;
 		} else {
-//			contacts[index].setName(null);
-//			contacts[index].setPhone(null);
-//			contacts[index].setEmail(null);
+		    Contact c = contacts[index];
+		    c.setName(contact.getName());
+		    c.setPhone(contact.getPhone());
+		    c.setEmail(contact.getEmail());
 			return 1;
 		}
 	}

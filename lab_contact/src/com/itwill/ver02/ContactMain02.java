@@ -61,7 +61,7 @@ public class ContactMain02 {
 		String email = scanner.nextLine();
 
 		Contact contact = new Contact(name, phone, email);
-		int result = dao.create(contact); // View 객체에서 Controller 객체의 기능을 사용.
+		int result = dao.create(contact);
 		if (result == 1) {
 			System.out.println("연락처 정보 저장 성공");
 		} else {
@@ -72,7 +72,7 @@ public class ContactMain02 {
 
 	private void readAllContacts() {
 		System.out.println("\n--- 연락처 목록 ---");
-		Contact[] contacts = dao.read(); // View에서 Controller 기능을 사용, 출력할 데이터를 가져옴.
+		Contact[] contacts = dao.read();
 		for (Contact c : contacts) {
 			System.out.println(c);
 		}
@@ -89,6 +89,7 @@ public class ContactMain02 {
 		if (contact != null) {
 			System.out.println(contact);
 		} else {
+			System.out.println(contact);
 			System.out.println("해당 인덱스에는 연락처 정보가 없습니다.");
 		}
 		
@@ -112,7 +113,6 @@ public class ContactMain02 {
 		System.out.println("이메일 수정>> ");
 		contact.setEmail(scanner.nextLine());
 
-		// View에서 Controller의 기능을 사용해서 비밀번호를 업데이트
 		int result = dao.update(index, contact);
 		if (result == 1) {
 			System.out.println("연락처 업데이트 성공");
