@@ -61,10 +61,10 @@ public class ContactDaoImpl implements ContactDao {
 		if (index < 0 || index >= contacts.length || contacts[index] == null) {
 			return 0;
 		} else {
-		    Contact c = contacts[index];
-		    c.setName(contact.getName());
-		    c.setPhone(contact.getPhone());
-		    c.setEmail(contact.getEmail());
+//		    Contact c = contacts[index];
+		    contacts[index].setName(contact.getName());
+		    contacts[index].setPhone(contact.getPhone());
+		    contacts[index].setEmail(contact.getEmail());
 			return 1;
 		}
 	}

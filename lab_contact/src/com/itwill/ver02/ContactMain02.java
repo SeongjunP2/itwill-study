@@ -34,8 +34,8 @@ public class ContactMain02 {
 			case 4:
 				app.editContactByIndex();
 				break;
-				default:
-					System.out.println("0~4 범위의 정수로 입력하세요...");
+			default:
+				System.out.println("0~4 범위의 정수로 입력하세요...");
 			}
 		}
 		
