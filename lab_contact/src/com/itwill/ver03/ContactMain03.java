@@ -39,7 +39,7 @@ public class ContactMain03 {
 				app.removeContactByIndex();
 				break;
 			default:
-				System.out.println("0~4 범위의 정수로 입력하세요...");
+				System.out.println("0~5 범위의 정수로 입력하세요...");
 			}
 		}
 		
@@ -159,7 +159,7 @@ public class ContactMain03 {
 		System.out.println("----------------------------------------------");
 		System.out.print("선택> ");
 
-		int menu = Integer.parseInt(scanner.nextLine());
+		int menu = inputInteger();
 
 		return menu;
 	}
