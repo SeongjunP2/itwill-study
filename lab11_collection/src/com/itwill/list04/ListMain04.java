@@ -14,7 +14,9 @@ public class ListMain04 {
         // -> [JAVASCRIPT, SERVLET, SPRING]
 		ArrayList<String> upperCase = new ArrayList<String>();
 		for (String s : names) {
+            if (s.length() >= 5) {
 			upperCase.add(s.toUpperCase());
+            }
 		}
 		System.out.println(upperCase + " ");
 
