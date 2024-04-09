@@ -49,7 +49,6 @@ public class ContactMain03 {
 	
 	private void saveNewContact() {
 		System.out.println("\n----- 새 연락처 저장 -----");
-		ContactDaoImpl daoImpl = (ContactDaoImpl) dao;
 		
 		System.out.print("이름 입력>> ");
 		String name = scanner.nextLine();
@@ -115,15 +114,19 @@ public class ContactMain03 {
 		System.out.println("수정 전: " + contact);
 
 		System.out.println("전화번호 수정>> ");
-		contact.setPhone(scanner.nextLine());
+//		contact.setPhone(scanner.nextLine());
+		String name = scanner.nextLine();
 		
 		System.out.println("이름 수정>> ");
-		contact.setName(scanner.nextLine());
+//		contact.setName(scanner.nextLine());
+        String phone = scanner.nextLine();
 		
 		System.out.println("이메일 수정>> ");
-		contact.setEmail(scanner.nextLine());
+//		contact.setEmail(scanner.nextLine());
+		String email = scanner.nextLine();
 
-		int result = dao.update(index, contact);
+        Contact update = new Contact(name, phone, email); // contact 객체에 새로 수정한 정보들을 저장
+		int result = dao.update(index, update); // contact 객체의 update 정보들을 dao.update 메서드에 전달
 		if (result == 1) {
 			System.out.println("연락처 업데이트 성공");
 		} else {
@@ -169,9 +172,9 @@ public class ContactMain03 {
         
         while(true) {
             try {
-                result = Integer.parseInt(scanner.nextLine());
+                result = Integer.parseInt(scanner.nextLine()); // 입력받은 문자열을 정수로 변환
                 break;
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException e) { // 정수 이외의 값 입력시 catch하는 곳
                 System.out.println("입력값은 정수여야 합니다.");
                 System.out.print("정수 입력>> ");
             }

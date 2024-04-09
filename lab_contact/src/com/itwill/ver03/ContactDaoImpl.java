@@ -10,7 +10,7 @@ public class ContactDaoImpl implements ContactDao {
 	
 	private List<Contact> contacts = new ArrayList<>();
 	
-	private int count = 0;
+//	private int count = 0; // 배열에서는 count 사용
 	
 	public static ContactDao getInstance() {
 		if (instance == null) {
@@ -20,13 +20,14 @@ public class ContactDaoImpl implements ContactDao {
 	}
 	
     public boolean isValidIndex(int index) {
-        return (index >= 0) && (index < count);
+//        return (index >= 0) && (index < count);  // 배열에서는 생성된 배열, index를 파악하기위해 count를 사용
+        return (index >= 0) && (index < contacts.size()); // list에서는 count가 아닌 size를 사용하면 된다.
     }
 
 	@Override
 	public int create(Contact contact) {
 		if (contacts.add(contact)) {
-			count++;
+//			count++;
 			return 1;
 		} else {
 			return 0;
@@ -45,7 +46,8 @@ public class ContactDaoImpl implements ContactDao {
 
 	@Override
 	public int update(int index, Contact contact) {
-		if (contacts.get(index) != null) {
+		if (isValidIndex(index)) { // 정상적인 인덱스의 값을 받았다면
+            contacts.set(index, contact); // 메인에서 전달받은 값(index, contact)들을 set을 이용해 수정 
 			return 1;
 		} else {
 			return 0;
@@ -54,7 +56,8 @@ public class ContactDaoImpl implements ContactDao {
 
 	@Override
 	public int delete(int index) {
-		if (contacts.remove(index) != null) {
+		if (isValidIndex(index)) {
+			contacts.remove(index); // 메인에서 전달받은 인덱스의 값을 받아서 remove를 사용해 리스트에서 삭제
 			return 1;
 		} else {
 			return 0;
