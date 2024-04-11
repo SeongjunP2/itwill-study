@@ -43,8 +43,21 @@ public class FileMain05 {
 				BufferedInputStream bis = new BufferedInputStream(fis);
 				ObjectInputStream ois = new ObjectInputStream(bis);
 		) {
-			list = (ArrayList) ois.readObject();
-			System.out.print(list.get(0) + " " + list.get(999_999));
+//			list = (ArrayList) ois.readObject();
+//			System.out.print(list.get(0) + " " + list.get(999_999));
+//            System.out.println(list.getFirst()); // list.get(0)
+//            System.out.println(list.getLast()); // list.get(999_999) // list.get(Products.size() -1)
+            
+            long start = System.currentTimeMillis(); // 파일에서 객체를 읽어 콘솔에 출력하기까지의 시간을 측정하기 위한 코드
+            
+            ArrayList<Product> products = (ArrayList<Product>) ois.readObject();
+            
+            long end = System.currentTimeMillis();
+            
+            System.out.println("파일 읽기 시간: " + (end - start) + "ms"); // 객체를 읽기 끝난 시간과 읽기 시작한 시간을 빼서 파일 읽기 시간을 측정
+            System.out.println("size = " + products.size());
+            System.out.println(products.getFirst()); // products.get(0)
+            System.out.println(products.getLast()); // products.get(999_999) // products.get(Products.size() -1)
 			
 		} catch (Exception e) {
 			e.printStackTrace();

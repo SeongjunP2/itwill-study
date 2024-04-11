@@ -30,7 +30,7 @@ import java.io.FileOutputStream;
 public class FileMain01 {
 
     public static void main(String[] args) {
-        String origin = "data/hello.txt"; // 원본 파일(읽을 파일) 경로, 이름.
+        String origin = "data/hello.txt"; // 원본 파일(읽을 파일) 경로, 이름.(경로를 지정하지 않으면 프로젝트 폴더에 저장됨
         String destination = "data/hello_copy.txt"; // 복사할 파일 경로, 이름.
         
         FileInputStream in = null;
