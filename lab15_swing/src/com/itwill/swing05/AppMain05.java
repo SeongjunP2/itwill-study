@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
 
 public class AppMain05 {
 
@@ -28,6 +29,7 @@ public class AppMain05 {
 	String name;
 	String phone;
 	String email;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -102,25 +104,31 @@ public class AppMain05 {
 		btnNewButton.setBounds(526, 186, 145, 48);
 		frame.getContentPane().add(btnNewButton);
 		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(42, 268, 629, 130);
+		frame.getContentPane().add(scrollPane);
+		
 		textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
 		textArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		textArea.setBounds(44, 268, 627, 130);
-		frame.getContentPane().add(textArea);
 	}
 	
 	private void handleInputButtonClick() {
+		// JTextField(이름, 전화번호, 이메일)에 입력된 문자열을 읽음.
 		name = "이름: " + textName.getText() + "\n";
 		phone = "번호: " + textPhone.getText() + "\n";
 		email = "이메일: " + textEmail.getText() + "\n";
 		
 		String result = name + phone + email;
 		
-		textArea.setText(result);
+		// 이름, 전화번호, 이메일을 JTextArea에 씀.
+		textArea.append(result); // 내용 추가시 기존에 작성된 내용 끝에 추가.
+//		textArea.setText(result); // 기존에 작성된 내용은 삭제.
 		
+		// 모든 JTextField의 입력된 내용을 지움.
 		textName.setText("");
 		textPhone.setText("");
 		textEmail.setText("");
 		
 	}
-
 }
