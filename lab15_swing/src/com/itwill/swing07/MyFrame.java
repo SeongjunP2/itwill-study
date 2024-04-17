@@ -1,5 +1,6 @@
 package com.itwill.swing07;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,11 +15,12 @@ public class MyFrame extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void showMyFrame() {
+	public static void showMyFrame(Component component) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					MyFrame frame = new MyFrame();
+					frame.setLocationRelativeTo(component);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

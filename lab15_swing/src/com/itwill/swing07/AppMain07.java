@@ -140,7 +140,7 @@ public class AppMain07 {
 		btnCustomFrame = new JButton("Custom Frame");
 		btnCustomFrame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MyFrame.showMyFrame();
+				MyFrame.showMyFrame(frame);
 			}
 		});
 		btnCustomFrame.setFont(new Font("굴림", Font.BOLD, 15));
