@@ -16,9 +16,8 @@ import java.awt.Component;
 import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ContactCreateFrame extends JFrame {
 	
@@ -172,6 +171,7 @@ public class ContactCreateFrame extends JFrame {
 			dispose(); // 현재 창 닫기
 		} else { // 연락처 저장 실패
 			// TODO 사용자에게 저장 실패 메시지 보여주기
+			JOptionPane.showMessageDialog(null, "저장 실패!", "경고", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 

@@ -18,11 +18,10 @@ import com.itwill.ver05.controller.ContactDao;
 import com.itwill.ver05.controller.ContactDaoImpl;
 import com.itwill.ver05.model.Contact;
 import com.itwill.ver05.view.ContactCreateFrame.CreateNotify;
+import com.itwill.ver05.view.ContactUpdateFrame.UpdateNotify;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-public class ContactMain05 implements CreateNotify {
+public class ContactMain05 implements CreateNotify, UpdateNotify {
 	
 	private static final String[] COLUMN_NAMES = {"이름", "전화번호"};
 
@@ -31,7 +30,7 @@ public class ContactMain05 implements CreateNotify {
 	private JFrame frame;
 	private JPanel buttonPanel;
 	private JButton btnCreate;
-	private JScrollPane scrollPane;
+	private JScrollPane scrollPanel;
 	private JTable table;
 	private JButton btnUpdate;
 	private JButton btnDelete;
@@ -80,7 +79,7 @@ public class ContactMain05 implements CreateNotify {
 		buttonPanel.add(btnCreate);
 		
 		btnUpdate = new JButton("업데이트");
-		btnUpdate.addActionListener((e) -> ContactUpdateFrame.showContactUpdateFrame(table.getSelectedRow()));
+		btnUpdate.addActionListener((e) -> ContactUpdateFrame.showContactUpdateFrame(table.getSelectedRow(), frame, ContactMain05.this));
 		btnUpdate.setFont(new Font("굴림", Font.BOLD, 20));
 		buttonPanel.add(btnUpdate);
 		
@@ -90,19 +89,25 @@ public class ContactMain05 implements CreateNotify {
 		buttonPanel.add(btnDelete);
 		
 		btnSearch = new JButton("검색");
-		btnSearch.addActionListener((e) ->
-				ContactSearchFrame.showContactSearchFrame()
-				);
+		btnSearch.addActionListener((e) -> ContactSearchFrame.showContactSearchFrame(frame));
 		btnSearch.setFont(new Font("굴림", Font.BOLD, 20));
 		buttonPanel.add(btnSearch);
 		
-		scrollPane = new JScrollPane();
-		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		scrollPanel = new JScrollPane();
+		frame.getContentPane().add(scrollPanel, BorderLayout.CENTER);
 		
 		table = new JTable();
+		
+		// 테이블 컬럼 이름의 폰트 설정
+		table.getTableHeader().setFont(new Font("굴림", Font.PLAIN, 15));
+		// 테이블 데이터 행의 폰트 설정
+		table.setFont(new Font("굴림", Font.PLAIN, 15));
+		// 테이블 행 높이(세로) 설정
+		table.setRowHeight(35);
+		
 		model = new DefaultTableModel(null, COLUMN_NAMES);
 		table.setModel(model);
-		scrollPane.setViewportView(table);
+		scrollPanel.setViewportView(table);
 	}
 	
 	private void deleteContact() {
@@ -162,6 +167,15 @@ public class ContactMain05 implements CreateNotify {
 		
 		// 사용자에게 알림
 		JOptionPane.showMessageDialog(frame, "새 연락처 저장 성공");
+	}
+
+	@Override
+	public void notifyContactUpdated() {
+		// ContactUpdateFrame에서 연락처 정보를 성공적으로 업데이트하면 호출하는 메서드. 
+		// 테이블을 새로 그림(reset)
+		resetTable();
+		
+		JOptionPane.showMessageDialog(frame, "연락처 업데이트 성공");
 	}
 
 }
