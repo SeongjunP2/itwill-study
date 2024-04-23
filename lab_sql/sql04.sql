@@ -47,3 +47,53 @@ select sum(comm), avg(comm) from emp;
 
 -- 단일 행 함수와 다중 행 함수는 함께 사용할 수 없음.
 -- select sal, sum(sal) from emp; --> sal은 sal에 들어있는 14개의 행의 값을 하나씩 출력(단일 행 함수), sum(sal)은 sal의 값을 모두 더한 값(숫자(다중 행 함수))를 출력하므로 오류 발생!
+
+
+/*
+ * 그룹별 쿼리(query):
+ * (예) 부서별 직원수, 부서별 급여 평균, ...
+ * (문법)
+ * select 컬럼, 함수호출, ...
+ * from 테이블
+ * where 조건식(1)
+ * group by 컬럼(그룹을 묶을 수 있는 변수)
+ * having 조건식(2)
+ * order by 컬럼(정렬 기준), ...;
+ *
+ * 조건식(1): 그룹으로 묶기 전에 행들을 선택할 조건.
+ * 조건식(2): 그룹으로 묶은 후에 행들을 선택할 조건.
+ */
+ 
+-- 부서별 급여 평균
+select deptno, round(avg(sal), 2) as AVG_SAL from emp group by deptno order by deptno; --> round 함수는 반올림하여 소숫점 2번째 자리까지 표시해줌
+
+-- 부서별 급여 평균, 표준편차
+select deptno, round(avg(sal), 2) as AVG_SAL, round(stddev(sal), 2) as STD_SAL from emp group by deptno order by deptno;
+ 
+-- 모든 문제에서 소수점은 반올림해서 소수점 이하 2자리까지 표시.
+-- Ex. 업무별 업무, 직원수, 급여 최댓값, 최솟값, 평균을 업무 오름차순으로 출력.
+select job, count(job) as COUNT, round(max(sal), 2) as MAX_SAL, round(min(sal), 2) as MIN_SAL, round(avg(sal), 2) as AVG_SAL from emp group by job order by job;
+-- Ex. 부서별/업무별로 부서번호, 업무, 직원수, 급여 평균을 검색.
+--     정렬 순서: (1) 부서번호 (2) 업무
+select deptno, job, count(*) as COUNT, round(avg(sal), 2) as AVG_SAL from emp group by deptno, job order by deptno, job; --> count안의 *은 전체 행을 카운트하겠다는 것(deptno나 job을 넣어도 상관x)
+-- Ex. 입사연도별 사원수를 검색. (힌트) to_char(날짜, 포맷) 이용.
+select to_char(hiredate, 'YYYY') as YEAR, count(*) as COUNT from emp group by to_char(hiredate, 'YYYY') order by YEAR; --> order by 뒤에는 as로 준 별명을 사용할 수 있다.
+-- Ex. 부서별 급여 평균 검색. 급여 평균이 2000 이상인 부서만 검색. having 사용
+select deptno, round(avg(sal), 2) as AVG_SAL from emp group by deptno having round(avg(sal), 2) >= 2000 order by deptno;
+-- Ex. mgr 컬럼이 null이 아닌 직원들 중에서 부서별 급여 평균을 검색. where 사용
+--     정렬순서: 부서번호 오름차순.
+select deptno, round(avg(sal), 2) as AVG_SAL from emp where mgr is not null group by deptno order by deptno;
+
+-- PRESIDENT는 제외하고, 업무별 사원수를 검색.
+-- 업무별 사원수가 3명 이상인 업무들만 검색. 업무이름 오르차순 정렬,
+select job, count(job) as COUNT from emp where job != 'PRESIDENT' group by job having count(job) >= 3 order by job; --> where와 having에서 조건을 처리
+select job, count(*) as COUNT from emp group by job having job != 'PRESIDENT' and count(job) >= 3 order by job; --> having에서 모든 조건을 처리
+
+-- 입사연도별, 부서별 사원수 검색. 1980년은 검색에서 제외.
+-- 연도별, 부서별 사원수가 2명 이상인 경우만 출력.
+-- 정렬 순서: (1) 연도 (2) 부서
+select to_char(hiredate, 'YYYY'), deptno, count(hiredate), count(deptno)
+from emp
+group by to_char(hiredate, 'YYYY'), deptno
+having count(hiredate) >= 2 and count(deptno) >= 2
+order by to_char(hiredate, 'YYYY'), deptno;
