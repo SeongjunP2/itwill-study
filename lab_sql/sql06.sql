@@ -37,9 +37,9 @@ where emp.deptno = dept.deptno;
 
 -- left (outer) join. 표준문법.
 select e.empno, e.ename, e.deptno, d.dname
-from emp e --> as를 생략해서 별명을 부여
+from emp e --> as를 생략해서 e라는 별명을 부여
     left outer join dept d on e.deptno = d.deptno;
---> left outer join에서 outer는 생략 가능    
+--> left outer join에서 outer는 생략 가능 
 
 -- left (outer) join. Oracle 문법.
 select e.empno, e.ename, e.deptno, d.dname 
@@ -50,8 +50,98 @@ where e.deptno = d.deptno(+);
 select e.empno, e.ename, d.deptno, d.dname
 from emp e
     right outer join dept d on e.deptno = d.deptno;
+--> right outer join에서 outer는 생략 가능
     
 -- right (outer) join. Oracle 문법.
 select e.empno, e.ename, d.deptno, d.dname
 from emp e, dept d
 where e.deptno(+) = d.deptno;
+
+-- full (outer) join. 표준문법.
+select e.empno, e.ename, e.deptno, d.deptno, d.dname
+from emp e
+    full join dept d on e.deptno = d.deptno;
+--> full outer join에서 outer는 생략 가능.
+
+-- Oracle은 full outer join 문법을 제공하지 않음.
+-- 집합 연산(합집합 union, 교집합 intersection, 차집합)을 사용.
+select e.empno, e.ename, e.deptno, d.deptno, d.dname
+from emp e, dept d
+where e.deptno = d.deptno(+)
+union
+select e.empno, e.ename, e.deptno, d.deptno, d.dname
+from emp e, dept d
+where e.deptno(+) = d.deptno;
+
+-- equi-join: join의 조건식이 = 연산자를 사용해서 만들어진 경우.
+-- non-equi join: join의 조건식이 부등호를 사용해서 만들어진 경우.
+-- 사번, 이름, 급여, 급여등급(호봉) 검색.
+select e.empno, e.ename, e.sal, s.grade
+from emp e
+    join salgrade s on e.sal between s.losal and s.hisal;
+-- join salgrade s on e.sal >= s.losal and e.sal <= s.hisal;
+
+select e.empno, e.ename, e.sal, s.grade
+from emp e, salgrade s
+where e.sal between s.losal and s.hisal;
+
+-- self join: 같은 테이블에서 join하는 것.
+-- 사번, 이름, 매니저 사번, 매니저 이름을 검색.
+select e1.empno, e1.ename, e1.mgr as MGR_NO, e2.ename as MGR_NAME
+from emp e1
+    join emp e2 on e1.mgr = e2.empno;
+
+select e1.empno, e1.ename, e1.mgr, e2.ename as MGR_NAME
+from emp e1, emp e2
+where e1.mgr = e2.empno;
+
+select e1.empno, e1.ename, e1.mgr, e2.ename as MGR_NAME
+from emp e1
+    left join emp e2 on e1.mgr = e2.empno;
+    
+select e1.empno, e1.ename, e1.mgr, e2.ename as MGR_NAME
+from emp e1, emp e2
+where e1.mgr = e2.empno(+);
+
+-- ex1. 직원 이름, 직원 근무 도시를 검색. 근무 도시 오름차순 정렬.
+select e.ename, d.loc
+from emp e
+    join dept d on e.deptno = d.deptno
+order by d.loc;
+-- ex2. 직원 이름, 매니저 이름, 급여, 급여 등급을 검색.
+--      정렬순서: (1)매니저, (2)급여 등급
+select e1.ename, e2.ename as MGR_NAME, e1.sal, s.grade
+from emp e1
+    join emp e2 on e1.mgr = e2.empno
+    join salgrade s on e1.sal between s.losal and s.hisal
+order by e2.ename, s.grade;
+-- ex3. 직원 이름, 부서 이름, 급여, 급여 등급을 검색.
+--      정렬 순서: (1)부서 이름, (2)급여 등급
+select e.ename, d.dname, e.sal, s.grade
+from emp e
+    join dept d on e.deptno = d.deptno
+    join salgrade s on e.sal between s.losal and s.hisal
+order by d.dname, s.grade;
+-- ex4. 부서 이름, 부서 위치, 부서의 직원수를 검색. 부서 번호 오름 차순.
+select d.dname, d.loc, count(*)
+from dept d
+    join emp e on d.deptno = e.deptno
+group by d.dname, d.loc, e.deptno
+order by e.deptno;
+-- ex5. 부서 번호, 부서 이름, 부서 직원수, 부서의 급여 최솟값,
+--      부서의 급여 최댓값 검색. 부서 번호 오름 차순.
+select d.deptno, d.dname, count(*), min(e.sal), max(e.sal)
+from dept d
+    join emp e on d.deptno = e.deptno
+group by d.deptno, d.dname
+order by d.deptno;
+-- ex6. 부서 번호, 부서 이름, 사번, 이름, 매니저 사번, 매니저 이름, (테이블4개 group by 필요x)
+--      급여, 급여 등급을 검색. 급여가 3000 이상인 직원들만 검색.
+--      정렬 순서: (1) 부서 번호, (2) 사번 오름차순.
+select e1.deptno, d.dname, e1.empno, e1.ename, e2.ename, e1.sal, s.grade
+from emp e1
+    join emp e2 on e1.mgr = e2.empno
+    join dept d on e1.deptno = d.deptno
+    join salgrade s on e1.sal between s.losal and s.hisal
+where e1.sal >= 3000
+order by e1.deptno, e1.empno;

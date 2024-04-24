@@ -55,8 +55,8 @@ where mgr = (select empno from emp where ename = 'KING');
 -- Ex. ACCOUNTING 부서에 일하는 직원들의 이름, 급여, 부서번호를 검색.
 select ename, sal, deptno
 from emp
-where dname = (select dname from dept where dname = 'ACCOUNTING');
+where deptno = (select deptno from dept where dname = 'ACCOUNTING');
 -- Ex. CHICAGO에서 근무하는 직원들의 이름, 급여, 부서 번호를 검색.
 select ename, sal, deptno
 from emp
-where loc = (select loc from dept where loc = 'CHICAGO');
+where deptno = (select deptno from dept where loc = 'CHICAGO');
