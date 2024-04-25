@@ -84,6 +84,139 @@ create table ex_test_default (
 
 insert into ex_test_default values (1, '2024-03-14');
 insert into ex_test_default (tdate) values ('2024-03-15');
-insert into ex_test_default (tno) values (2);
+--> tno에는 null이 삽입됨.
+insert into ex_test_default (tno) values (1234);
+--> tdate에는 null 대신 기본값 sysdate(현재 시간)가 삽입됨.
 
 select * from ex_test_default;
+commit;
+
+/*
+ * 테이블을 생성할 때 제약조건(constraint) 만들기:
+ * (1) primary key(PK, 고유키)
+ * (2) not null(NN)
+ * (3) unique
+ * (4) check
+ * (5) foreign key(FK, 외래키)
+ */
+
+-- 테이블 생성할 때 제약조건 만들기 1: 제약조건 이름 설정하지 않기.
+create table ex_emp1 (
+    eno number(4) primary key, -- 사번. 고유키.
+    ename varchar2(10) not null, -- 이름.
+    email varchar2(100) unique, -- 사원의 이메일
+    age number(3) check (age >= 0),
+    memo varchar2 (1000)
+);
+
+insert into ex_emp1
+values (1001, '홍길동', 'hdg@itwill.com', 16, '안녕하세요');
+
+insert into ex_emp1 (eno, ename)
+values (1002, '허균');
+
+insert into ex_emp1 (eno, ename) values (1002, 'abc');
+--> 실패: PK 제약조건 위배
+
+insert into ex_emp1(eno) values (1003);
+--> NN 제약조건 위배
+
+insert into ex_emp1 (eno, ename, email)
+values (1003, 'Johne Doe', 'hdg@itwill.com');
+--> unique 제약조건 위배
+
+insert into ex_emp1 (eno, ename, age)
+values (1005, 'Scott', -1);
+--> check (age >= 0) 제약 조건 위배
+
+select * from ex_emp1;
+commit;
+
+-- 제약조건 만들기 2: 제약조건 이름 설정
+create table ex_emp2 (
+    id number(4) constraint ex_emp2_pk_id primary key,
+    ename varchar2(10) constraint ex_emp2_nn_ename not null,
+    email varchar2(100) constraint ex_emp2_uq_email unique,
+    age number(3) constraint ex_emp2_ck_age check (age >= 0),
+    memo varchar2(1000)
+);
+
+insert into ex_emp2 (id, ename) values (1, '홍길동');
+
+insert into ex_emp2 (id, ename) values (1, '오쌤');
+
+select * from ex_emp2;
+commit;
+
+-- 제약조건 만들기 3: 컬럼 정의(데이터 타입 선언) 따로, 제약조건 정의 따로.
+create table ex_emp3 (
+    -- 컬럼 정의: 컬럼 이름 & 데이터 타입
+    id number(4),
+    ename varchar2(10),
+    email varchar2(100),
+    age number(3) check (age >= 0),
+    memo varchar2(1000),
+    -- 제약 조건 정의
+    constraint ex_emp3_pk_id primary key (id),
+    constraint ex_emp3_nn_ename check (ename is not null), -- 주의!
+    constraint ex_emp3_uq_email unique (email),
+    constraint ex_emp3_ck_age check (age >= 0)
+);
+
+insert into ex_emp3 (id) values (1234);
+--> check(not null) 위배
+
+-- FK(Foreign Key, 외래키): 다른 테이블의 PK를 참조하는 제약조건.
+-- 데이터를 insert할 때, 다른 테이블의 PK에 없는 값이 삽입되지 않도록.
+-- 테이블을 만들 때 FK를 설정하려면, PK가 설정된 다른 테이블이 먼저 생성되어 있어야 함.
+
+create table ex_dept (
+    deptno number(2)
+            constraint ex_dept_pk_deptno primary key,
+    dname varchar(10)
+            constraint ex_dept_nn_dname not null
+);
+
+create table ex_emp4 (
+    empno number(4)
+            constraint ex_emp4_pk_empno primary key,
+    ename varchar(10)
+            constraint ex_emp4_nn_ename not null,
+    deptno number(2)
+            constraint ex_emp4_fk_deptno references ex_dept (deptno)
+);
+
+insert into ex_emp4 values (1200, '오쌤', 10);
+--> 10번 부서가 ex_dept 테이블에 없는 경우에는 insert 실패! FK 위배.
+--> 10번 부서가 ex_dept 테이블에 있는 경우에는 insert 성공!
+
+insert into ex_dept values (10, '개발1팀');
+
+insert into ex_emp4 (empno, ename) values (1300, '홍길동');
+--> FK 제약조건이 있는 컬럼에는 null 삽입될 수도 있음.
+
+insert into ex_emp4 values (1400, 'Jake', 10);
+--> FK 제약조건이 있는 컬럼에는 중복된 값이 삽입될 수도 있음.
+
+select * from ex_dept;
+select * from ex_emp4;
+
+-- 컬럼 정의 따로, FK 계약조건 설정 따로
+create table ex_emp5 (
+    -- 컬럼 정의:
+    empno number(4),
+    ename varchar2(10),
+    deptno number(2),
+    -- 제약조건 정의:
+    constraint ex_emp5_pk_empno primary key (empno),
+    constraint ex_emp5_nn_ename check (ename is not null),
+    constraint ex_emp5_fk_deptno foreign key (deptno) references ex_dept (deptno)
+);
+
+-- 오라클은 테이블들을 관리하기 위한 테이블을 가지고 있음.
+select * from user_tables; --> 모든 테이블을 보여준다
+select table_name from user_tables;
+
+-- 오라클은 제약조건들을 관리하기 위한 테이블을 가지고 있음.
+select * from user_constraints;
+select constraint_name from user_constraints;

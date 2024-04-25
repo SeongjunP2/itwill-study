@@ -130,18 +130,18 @@ group by d.dname, d.loc, e.deptno
 order by e.deptno;
 -- ex5. 부서 번호, 부서 이름, 부서 직원수, 부서의 급여 최솟값,
 --      부서의 급여 최댓값 검색. 부서 번호 오름 차순.
-select d.deptno, d.dname, count(*), min(e.sal), max(e.sal)
+select d.deptno, d.dname, count(e.empno), nvl(min(e.sal), 0), nvl(max(e.sal), 0)
 from dept d
-    join emp e on d.deptno = e.deptno
+    left join emp e on d.deptno = e.deptno
 group by d.deptno, d.dname
 order by d.deptno;
 -- ex6. 부서 번호, 부서 이름, 사번, 이름, 매니저 사번, 매니저 이름, (테이블4개 group by 필요x)
 --      급여, 급여 등급을 검색. 급여가 3000 이상인 직원들만 검색.
 --      정렬 순서: (1) 부서 번호, (2) 사번 오름차순.
-select e1.deptno, d.dname, e1.empno, e1.ename, e2.ename, e1.sal, s.grade
+select e1.deptno, d.dname, e1.empno, e1.ename, e2.empno as MGR_NO, e2.ename as MGR_NAME, e1.sal, s.grade
 from emp e1
-    join emp e2 on e1.mgr = e2.empno
-    join dept d on e1.deptno = d.deptno
+    left join emp e2 on e1.mgr = e2.empno
+    left join dept d on e1.deptno = d.deptno
     join salgrade s on e1.sal between s.losal and s.hisal
 where e1.sal >= 3000
 order by e1.deptno, e1.empno;
