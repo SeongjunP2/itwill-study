@@ -60,18 +60,17 @@ from employees e
 group by e.department_id;
 
 -- 10. 부서별 급여 평균이 최대인 부서의 부서번호, 급여 평균을 검색.
-select e.department_id, max(e.salary) as 급여평균최대
+select e.department_id, avg(e.salary) as 급여평균최대
 from employees e
     join departments d on e.department_id = d.department_id
-where e.salary = (select avg(salary) from employees)
-group by e.department_id;
-
-select avg(salary)
-from employees e
-where ;
+group by e.department_id
+having avg(e.salary) = (select max(avg_salary) 
+                        from (select avg(salary) as avg_salary 
+                              from employees 
+                              group by department_id));
 
 -- 11. 사번, 직원이름, 국가이름, 급여 검색.
-select e.employee_id, concat(e.first_name, e.last_name) as 직원이름, c.country_name, e.salary
+select e.employee_id, e.first_name || ' ' || e.last_name as 직원이름, c.country_name, e.salary
 from employees e
     join departments d on e.department_id = d.department_id
     join locations l on d.location_id = l.location_id
@@ -86,31 +85,33 @@ from employees e
 group by c.country_name;
 
 -- 13. 사번, 직원이름, 직무 이름, 급여를 검색.
-select e.employee_id, concat(e.first_name, e.last_name) as 직원이름, d.department_name, e.salary
+select e.employee_id, e.first_name || ' ' || e.last_name as 직원이름, j.job_title, e.salary
 from employees e
-    join departments d on e.department_id = d.department_id;
+    join jobs j on e.job_id = j.job_id;
     
 -- 14. 직무 이름, 직무별 급여 평균, 최솟값, 최댓값 검색.
-select d.department_name, round(avg(e.salary), 2) as 평균, round(min(e.salary), 2) as 최솟값, round(max(e.salary), 2) as 최댓값
+select j.job_title, round(avg(e.salary), 2) as 평균, round(min(e.salary), 2) as 최솟값, round(max(e.salary), 2) as 최댓값
 from employees e
-    join departments d on e.department_id = d.department_id 
-group by d.department_name;
+    join jobs j on e.job_id = j.job_id
+group by j.job_title;
 
 -- 15. 국가 이름, 직무 이름, 국가별 직무별 급여 평균 검색.
-select c.country_name, d.department_name, round(avg(e.salary), 2) as 평균
+select c.country_name, j.job_title, round(avg(e.salary), 2) as 평균
 from employees e
     join departments d on e.department_id = d.department_id
+    join jobs j on e.job_id = j.job_id
     join locations l on d.location_id = l.location_id
     join countries c on l.country_id = c.country_id 
-group by c.country_name, d.department_name;
+group by c.country_name, j.job_title;
 
 -- 16. 국가 이름, 직무 이름, 국가별 직무별 급여 합계을 출력.
 --     미국에서, 국가별 직무별 급여 합계가 50,000 이상인 레코드만 출력.
-select c.country_name, d.department_name, sum(e.salary) as 합계
+select c.country_name, j.job_title, sum(e.salary) as 합계
 from employees e
     join departments d on e.department_id = d.department_id
+    join jobs j on e.job_id = j.job_id
     join locations l on d.location_id = l.location_id
     join countries c on l.country_id = c.country_id
 where c.country_name = 'United States of America'
-group by c.country_name, d.department_name
+group by c.country_name, j.job_title
 having sum(e.salary) >= 50000;
