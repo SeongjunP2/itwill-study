@@ -60,7 +60,7 @@ from employees e
 group by e.department_id;
 
 -- 10. 부서별 급여 평균이 최대인 부서의 부서번호, 급여 평균을 검색.
-select e.department_id, avg(e.salary) as 급여평균최대
+select e.department_id, round(avg(e.salary), 1) as 급여평균최대
 from employees e
     join departments d on e.department_id = d.department_id
 group by e.department_id
@@ -68,6 +68,15 @@ having avg(e.salary) = (select max(avg_salary)
                         from (select avg(salary) as avg_salary 
                               from employees 
                               group by department_id));
+
+---(3) 다중행 서브쿼리
+select department_id, round(avg(salary), 1)
+from employees
+group by department_id
+having avg(salary) >= ALL (
+    select avg(salary) from employees
+    group by department_id
+);
 
 -- 11. 사번, 직원이름, 국가이름, 급여 검색.
 select e.employee_id, e.first_name || ' ' || e.last_name as 직원이름, c.country_name, e.salary
