@@ -6,9 +6,9 @@ create table blogs (
     created_time timestamp default systimestamp,
     modified_time timestamp default systimestamp,
     constraint blogs_pk primary key(id)
-);    
+);
     
-insert into blogs (title, content,writer)
+insert into blogs (title, content, writer)
 values ('test', '두번째 블로그 테스트', 'guest');
 
 select * from blogs;
